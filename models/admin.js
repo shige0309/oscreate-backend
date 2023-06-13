@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("mongoose-bcrypt");
 
 const adminSchema = new mongoose.Schema(
     {
@@ -17,6 +18,6 @@ const adminSchema = new mongoose.Schema(
         },
     },
     {timestamps: true}
-);
+).plugin(bcrypt,{ fields: ['password'] });
 
 module.exports = mongoose.model("Admin", adminSchema);
