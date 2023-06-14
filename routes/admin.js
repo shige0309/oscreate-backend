@@ -1,12 +1,22 @@
 const router = require("express").Router();
 const Admin = require("../models/Admin");
+const jwt = require('jsonwebtoken');
+const verifyToken = require('../middleware/verifyToken');
+
+const generateToken = (id) => {
+    return jwt.sign({id}, process.env.JWT_SECRET_KEY, {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+    });
+}
 
 //admin登録
 router.post("/register", async (req, res) => {
     try {
+        const {email, password} = req.body;
+        
         const newAdmin = new Admin({
-            username: req.body.username,
-            password: req.body.password
+            email: email,
+            password: password
         });
 
         const admin = await newAdmin.save();
@@ -20,29 +30,48 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
 
-        const admin = await Admin.findOne({ username: req.body.username });
+        const {email, password} = req.body;
 
-        if(!admin) return res.status(404).send("ユーザーが見つかりません");
+        const admin = await Admin.findOne({ email: email });
+        if (!admin) return res.status(404).json("ユーザーが見つかりません");
 
-        const validPassword = await admin.verifyPassword(req.body.password);
-
+        const validPassword = await admin.verifyPassword(password);
         if(!validPassword) return res.status(400).json("パスワードが違います");
 
-        return res.status(200).json(admin);
+        const token = generateToken(admin._id);
+
+        return res.status(200).json({ message: 'ログインに成功しました。', token, admin});
 
     } catch (error) {
         return res.status(500).json(error);
     }
 });
 
+// router.get("/admin-test", verifyToken, async (req, res) => {
+//     const email = req.email;
+//     const admin = await Admin.findOne({email: email});
+//     if (!admin) {
+//         return res.status(404).json({ message: 'ユーザは存在しません。' });
+//     }
+
+//     return res.status(200).json({ admin });
+// });
+
 //Admin情報の更新
-router.put("/:id", async (req, res) => {
+router.put("/update", verifyToken, async (req, res) => {
     if(req.body.adminId === req.params.id) {
         try {
+            const id = req.id;
+
             // 一つのユーザーを検索し更新する $setにて全てのパラメーター
-            await Admin.findByIdAndUpdate(req.params.id, {
+            const admin = await Admin.findByIdAndUpdate({ _id: id}, {
                 $set: req.body
             });
+
+            if (!admin) {
+                return res.status(404).json({ message: 'ユーザは存在しません。' });
+            }
+
             res.status(200).json("ユーザー情報が更新されました。");
         } catch (error) {
             res.status(500).json(error);
@@ -53,10 +82,17 @@ router.put("/:id", async (req, res) => {
 });
 
 //Admin情報の削除
-router.delete("/:id", async (req,res) => {
+router.delete("/:id", verifyToken, async (req,res) => {
     if(req.body.adminId === req.params.id) {
         try {
-            await Admin.findByIdAndDelete(req.params.id);
+            const id = req.id;
+            const admin = await Admin.findByIdAndDelete(id);
+
+            if (!admin) {
+                return res.status(404).json({ message: 'ユーザは存在しません。' });
+            }
+
+            // await Admin.findByIdAndDelete(req.params.id);
             res.status(200).json("管理者情報を削除しました");
         } catch (error) {
             res.status(500).json(error);
@@ -68,22 +104,20 @@ router.delete("/:id", async (req,res) => {
 });
 
 //Admin情報の取得
-router.get("/:id", async (req,res) => {
-    if(req.body.adminId === req.params.id) {
-        try {
-            await Admin.findById(req.params.id);
-            res.status(200).json("管理者情報を削除しました");
-        } catch (error) {
-            res.status(500).json(error);
+router.get("/", verifyToken, async (req,res) => {
+    try {
+        const id = req.id;
+        console.log('id',id);
+        const admin = await Admin.findById({ _id: id});
+        console.log('admin:',admin);
+        if (!admin) {
+            return res.status(404).json("ユーザは存在しません。");
         }
-
-    } else {
-        res.status(403).json("削除できませんでした");
+        console.log("node admin",admin);
+        res.status(200).json(admin._id);
+    } catch (error) {
+        res.status(500).json(error);
     }
 });
-
-// router.get('/', (req,res) => {
-//     res.send('admin router');
-// })
 
 module.exports = router;

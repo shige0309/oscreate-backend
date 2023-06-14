@@ -3,7 +3,7 @@ const bcrypt = require("mongoose-bcrypt");
 
 const adminSchema = new mongoose.Schema(
     {
-        username: {
+        email: {
             type: String,
             require: true,
             max: 10,

@@ -4,14 +4,16 @@
   "description": "os-create",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "start": "nodemon server.js"
   },
   "author": "os",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
     "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.2.3",
     "mongoose-bcrypt": "^1.10.1",
     "nodemon": "^2.0.22"
