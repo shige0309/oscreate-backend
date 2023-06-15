@@ -29,7 +29,6 @@ router.post("/register", async (req, res) => {
 //ログイン
 router.post("/login", async (req, res) => {
     try {
-
         const {email, password} = req.body;
 
         const admin = await Admin.findOne({ email: email });
@@ -66,28 +65,6 @@ router.put("/update", verifyToken, async (req, res) => {
         res.status(500).json(error);
     }
 });
-
-//Admin情報の削除
-// router.delete("/:id", verifyToken, async (req,res) => {
-//     if(req.body.adminId === req.params.id) {
-//         try {
-//             const id = req.id;
-//             const admin = await Admin.findByIdAndDelete(id);
-
-//             if (!admin) {
-//                 return res.status(404).json({ message: 'ユーザは存在しません。' });
-//             }
-
-//             // await Admin.findByIdAndDelete(req.params.id);
-//             res.status(200).json("管理者情報を削除しました");
-//         } catch (error) {
-//             res.status(500).json(error);
-//         }
-
-//     } else {
-//         res.status(403).json("削除できませんでした");
-//     }
-// });
 
 //Admin情報の取得
 router.get("/", verifyToken, async (req,res) => {
