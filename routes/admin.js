@@ -47,74 +47,57 @@ router.post("/login", async (req, res) => {
     }
 });
 
-// router.get("/admin-test", verifyToken, async (req, res) => {
-//     const email = req.email;
-//     const admin = await Admin.findOne({email: email});
-//     if (!admin) {
-//         return res.status(404).json({ message: 'ユーザは存在しません。' });
-//     }
-
-//     return res.status(200).json({ admin });
-// });
-
 //Admin情報の更新
 router.put("/update", verifyToken, async (req, res) => {
-    if(req.body.adminId === req.params.id) {
-        try {
-            const id = req.id;
+    try {
+        const id = req.id;
 
-            // 一つのユーザーを検索し更新する $setにて全てのパラメーター
-            const admin = await Admin.findByIdAndUpdate({ _id: id}, {
-                $set: req.body
-            });
+        // 一つのユーザーを検索し更新する $setにて全てのパラメーター
+        const admin = await Admin.findByIdAndUpdate({ _id: id}, {
+            $set: req.body
+        });
 
-            if (!admin) {
-                return res.status(404).json({ message: 'ユーザは存在しません。' });
-            }
-
-            res.status(200).json("ユーザー情報が更新されました。");
-        } catch (error) {
-            res.status(500).json(error);
+        if (!admin) {
+            return res.status(404).json({ message: 'ユーザは存在しません。' });
         }
-    } else {
-        return res.status(403).json("アカウントの情報を更新できません。");
+
+        res.status(200).json("ユーザー情報が更新されました。");
+    } catch (error) {
+        res.status(500).json(error);
     }
 });
 
 //Admin情報の削除
-router.delete("/:id", verifyToken, async (req,res) => {
-    if(req.body.adminId === req.params.id) {
-        try {
-            const id = req.id;
-            const admin = await Admin.findByIdAndDelete(id);
+// router.delete("/:id", verifyToken, async (req,res) => {
+//     if(req.body.adminId === req.params.id) {
+//         try {
+//             const id = req.id;
+//             const admin = await Admin.findByIdAndDelete(id);
 
-            if (!admin) {
-                return res.status(404).json({ message: 'ユーザは存在しません。' });
-            }
+//             if (!admin) {
+//                 return res.status(404).json({ message: 'ユーザは存在しません。' });
+//             }
 
-            // await Admin.findByIdAndDelete(req.params.id);
-            res.status(200).json("管理者情報を削除しました");
-        } catch (error) {
-            res.status(500).json(error);
-        }
+//             // await Admin.findByIdAndDelete(req.params.id);
+//             res.status(200).json("管理者情報を削除しました");
+//         } catch (error) {
+//             res.status(500).json(error);
+//         }
 
-    } else {
-        res.status(403).json("削除できませんでした");
-    }
-});
+//     } else {
+//         res.status(403).json("削除できませんでした");
+//     }
+// });
 
 //Admin情報の取得
 router.get("/", verifyToken, async (req,res) => {
     try {
         const id = req.id;
-        console.log('id',id);
         const admin = await Admin.findById({ _id: id});
-        console.log('admin:',admin);
         if (!admin) {
             return res.status(404).json("ユーザは存在しません。");
         }
-        console.log("node admin",admin);
-        res.status(200).json(admin._id);
+        res.status(200).json(admin);
     } catch (error) {
         res.status(500).json(error);
     }
