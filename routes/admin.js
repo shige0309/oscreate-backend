@@ -50,8 +50,6 @@ router.post("/login", async (req, res) => {
 router.put("/update", verifyToken, async (req, res) => {
     try {
         const id = req.id;
-
-        // 一つのユーザーを検索し更新する $setにて全てのパラメーター
         const admin = await Admin.findByIdAndUpdate({ _id: id}, {
             $set: req.body
         });

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require("mongoose-bcrypt");
 
 const workSchema = new mongoose.Schema(
     {
@@ -25,5 +24,8 @@ const workSchema = new mongoose.Schema(
             type: String,
             default: "",
         }
-    }
-)
+    },
+    { timestamps: true }
+);
+
+module.exports = mongoose.model("Work", workSchema);
