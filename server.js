@@ -19,7 +19,7 @@ mongoose.connect(process.env.DATABASEURL)
 }) 
 
 //ミドルウェア
-app.use("images", express.static(path.join(__dirname, "public/images")));
+app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.use(express.json());
 app.use(cors());
 app.use("/api/admin", adminRoute);
