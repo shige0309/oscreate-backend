@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Work =require("../models/Work");
+const Work = require("../models/Work");
 
 router.post('/register', async (req,res) => {
     const newWork = new Work(req.body);
