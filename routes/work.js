@@ -22,8 +22,8 @@ router.get("/get", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     try {
-        const response = await Work.findById(req.params.id);
-        return res.status(200).json(response);
+        const work = await Work.findById(req.params.id);
+        return res.status(200).json(work);
     } catch (error) {
         return res.status(500).json(error);
     }
