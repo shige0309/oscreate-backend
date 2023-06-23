@@ -55,7 +55,7 @@ router.put("/update", verifyToken, async (req, res) => {
         });
 
         if (!admin) {
-            return res.status(404).json({ message: 'ユーザは存在しません。' });
+            return res.status(404).json("ユーザは存在しません");
         }
 
         res.status(200).json("ユーザー情報が更新されました。");
