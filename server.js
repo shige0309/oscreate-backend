@@ -4,6 +4,7 @@ const adminRoute = require("./routes/admin");
 const blogRoute = require("./routes/blog");
 const workRoute = require("./routes/work");
 const uploadRoute = require("./routes/upload");
+const emailRoute = require("./routes/email");
 const mongoose = require("mongoose");
 const PORT = process.env.PORT || 4000;
 const cors = require("cors");
@@ -26,5 +27,6 @@ app.use("/api/admin", adminRoute);
 app.use("/api/blog", blogRoute);
 app.use("/api/work", workRoute);
 app.use("/api/upload", uploadRoute);
+app.use("/api/email", emailRoute);
 
 app.listen(PORT, () => console.log("サーバーが起動しました。"));
