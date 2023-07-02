@@ -36,7 +36,8 @@ router.post("/", upload.single("file"), async (req, res) => {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: req.body.folder + req.body.name,
         Body: req.file.buffer,
-        ContentType: req.file.mimetype
+        ContentType: req.file.mimetype,
+        ACL: "public-read"
     };
 
     try {
