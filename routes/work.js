@@ -16,7 +16,7 @@ router.get("/get", async (req, res) => {
         const works = await Work.find();
         return res.status(200).json(works);
     } catch (error) {
-        console.log(error);
+        return res.status(500).json(error);
     }
 });
 

@@ -112,7 +112,6 @@ router.post("/send", async (req, res) => {
     await ses.send(sendAdminEmailCommand);
     const newEmail = new Email(req.body);
     const email = await newEmail.save();
-    console.log(email);
     return res.status(200).json(email);
 
     } catch (error) {
